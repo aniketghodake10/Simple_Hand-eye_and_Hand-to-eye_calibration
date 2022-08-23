@@ -1,0 +1,31 @@
+aruco_clipboard.txt
+
+rosrun tf tf_echo camera_optical_link base_link
+
+
+rosrun tf2_ros static_transform_publisher 0 0 -0.05 0 0 0 1 aruco_marker tool0
+
+source ~/catkin_ws/devel/setup.bash
+
+
+
+
+roslaunch ur5_gpd_moveit_config aniket_gazebo.launch
+roslaunch ur5_gpd_moveit_config demo.launch
+rosrun test_moveit_gazebo_config2 move_arm_gazebo2
+roslaunch aruco_ros single.launch
+rostopic echo /aruco_single/pose
+
+
+
+rosrun tf tf_echo camera_rgb_optical_frame world
+
+
+rosrun tf2_ros static_transform_publisher 0 0 -10 0 0 0 1 DICT_ARUCO_ORIGINAL_id26_link  world
+rosrun tf2_ros static_transform_publisher 0 0 0.0 0 0 0 1 camera_rgb_optical_frame  world
+
+
+rosrun tf2_ros static_transform_publisher -0.06131 -0.13069 0.62839 0.9960626082655395 0.014928434287224037 -0.04082586029103526 0.0772636486096742 a  b
+rosrun tf2_ros static_transform_publisher 0.17872 -0.12699 0.60083 0.9931875192725891 0.012939009916043125 -0.08574949540925669 0.07783416743700057 a  c
+rosrun tf tf_echo b c
+

@@ -1,0 +1,35 @@
+source ~/aniket/bin/activate
+source ~/moveit_grasp_venv/bin/activate
+source ~/vgn_venv/bin/activate
+source ~/mvp_venv/bin/activate
+source ~/pointnetgpd_venv/bin/activate
+
+source ~/kinect_ws/devel/setup.bash 
+roslaunch freenect_launch freenect.launch depth_registration:=true
+rosrun rviz rviz
+
+rosrun pcl_ros pointcloud_to_pcd input:=/camera/depth_registered/points
+rosrun image_view image_saver image:=/camera/rgb/image_color
+
+./detect_grasps ../cfg/eigen_params.cfg ../tutorials/cropped_bottle.pcd
+
+
+source ~/gpd_ws/devel/setup.bash
+source ~/catkin_ws/devel/setup.bash
+
+
+rosrun pcl_ros pcd_to_pointcloud cropped_bottle.pcd 0.1 _frame_id:=/camera_optical_frame
+rosrun pcl_ros pcd_to_pointcloud cluttered_objects.pcd 0.1 _frame_id:=/camera_optical_frame
+rosrun test_moveit_gazebo_config2 point_cloud_gazebo
+
+
+
+rosrun vgn aniket_panda_grasp.py --model data/models/vgn_conv.pth
+
+https://chev.me/arucogen/
+
+13.9 cm
+
+
+source ~/gpd_ws/devel/setup.bash
+roslaunch gpd_ros ur5.launch
